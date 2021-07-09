@@ -5,7 +5,7 @@
 
 from typing import List
 import bpy
-from bpy.types import Context, Object, Operator, Mesh, TextCurve, VectorFont
+from bpy.types import Context, Object, Operator, VectorFont
 import math
 from mathutils import Vector
 from os import path
@@ -102,33 +102,32 @@ class TextMeshCreatorOperation(Operator):
         return objects
 
     def create_object(self, context: Context, number: int, text: str, font: VectorFont, props: TextMeshCreatorProperties) -> bool:
-        font_curve: TextCurve = bpy.data.curves.new(type="FONT", name="Font Curve")
-        font_curve.body = text
-        font_curve.font = font
-        font_curve.extrude = props.thickness
-        font_curve.align_x = props.horizontal_alignment
-        font_curve.align_y = props.vertical_alignment
-        font_curve.space_character = props.character_spacing
-        font_curve.space_word = props.word_spacing
+        rotation = (math.radians(props.rotation_x), math.radians(props.rotation_y), math.radians(props.rotation_z))
 
-        font_object_o: Object = bpy.data.objects.new(name="OBJECT", object_data=font_curve)
-        bpy.context.scene.collection.objects.link(font_object_o)
+        # I can't find a way to get the ObjectBase in here :(
+        # But, bpy.ops.object.text_add set the ObjectBase correctly :)
+        bpy.ops.object.text_add(rotation=rotation)
+        font_object_o: Object = bpy.context.object
+        font_object_o.name = "OBJECT"
+        font_object_o.data.name = "CURVE"
+        font_object_o.data.body = text
+        font_object_o.data.font = font
+        font_object_o.data.extrude = props.thickness
+        font_object_o.data.align_x = props.horizontal_alignment
+        font_object_o.data.align_y = props.vertical_alignment
+        font_object_o.data.space_character = props.character_spacing
+        font_object_o.data.space_word = props.word_spacing
 
-        depsgraph = context.evaluated_depsgraph_get()
-        object_eval = font_object_o.evaluated_get(depsgraph=depsgraph)
+        bpy.context.view_layer.objects.active = font_object_o
+        bpy.ops.object.convert(target="MESH")
+        bpy.ops.object.transform_apply(rotation=True, scale=True, location=True)
 
-        font_mesh: Mesh = bpy.data.meshes.new_from_object(object_eval)
-        font_object_f: Object = bpy.data.objects.new(name=text, object_data=font_mesh)
+        font_object_f: Object = bpy.context.object
+        font_object_f.name = text
         font_object_f.location = (0, 0, 0)
-        font_object_f.rotation_euler.x = math.radians(props.rotation_x)
-        font_object_f.rotation_euler.y = math.radians(props.rotation_y)
-        font_object_f.rotation_euler.z = math.radians(props.rotation_z)
         font_object_f.scale.x = props.scale_x
         font_object_f.scale.y = props.scale_y
         font_object_f.scale.z = props.scale_z
-
-        bpy.context.scene.collection.objects.link(font_object_f)
-        bpy.context.scene.collection.objects.unlink(font_object_o)
 
         override = bpy.context.copy()
         override["selected_editable_objects"] = [font_object_f]
