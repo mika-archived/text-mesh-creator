@@ -69,6 +69,7 @@ class TextMeshCreatorUI(Panel):
 
         column.separator()
         column.label(text="Export")
+        column.prop(props, "is_preview")
         column.prop(props, "increment_from")
         column.prop(props, "export_path")
 

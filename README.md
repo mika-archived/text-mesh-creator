@@ -25,6 +25,7 @@ This is a alternative implementation of [this add-on](https://booth.pm/ja/items/
 | Decimate Ratio          | `float` | `0.5`          | Decimate Ratio                                                                           |
 | Separate by Loose Parts | `bool`  | `True`         | Separate character by loose parts                                                        |
 | Center to Origin        | `bool`  | `False`        | Set to True if want to center of the text to be the origin                               |
+| Enable Preview Mode     | `bool`  | `False`        | Set to True if want to check the generation result according to the set value            |
 | Increment From          | `int`   | `0`            | Offset value of serial number for output file                                            |
 | Export Directory        | `str`   | `(null)`       | Export FBX to base directory path                                                        |
 

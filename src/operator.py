@@ -148,8 +148,12 @@ class TextMeshCreatorOperation(Operator):
 
         if props.separate_by_loose_parts:
             objects = self.separate_by_loose_parts(font_object_f, props.thickness)
+            if props.is_preview:
+                return number
             return self.export_object(number, text, props.export_path, objects)
 
+        if props.is_preview:
+            return number
         return self.export_object(number, text, props.export_path, [font_object_f])
 
     def execute(self, context):
@@ -164,15 +168,19 @@ class TextMeshCreatorOperation(Operator):
                 self.report({"ERROR"}, "Font file not found or invalid format.")
                 return {"CANCELLED"}
 
+        characters = []
+
         if props.separate_by == "CHARACTER":
             characters = list(props.strings)
-            for character in characters:
-                number = self.create_object(context, number, character, font, props)
         elif props.separate_by != "NONE":
             characters = props.strings.split(self.separators()[props.separate_by])
-            for character in characters:
-                number = self.create_object(context, number, character, font, props)
         else:
-            number = self.create_object(context, number, props.strings, font, props)
+            characters = [props.strings]
+
+        if props.is_preview:
+            characters = [characters[0]]
+
+        for character in characters:
+            number = self.create_object(context, number, character, font, props)
 
         return {"FINISHED"}
