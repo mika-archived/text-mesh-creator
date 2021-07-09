@@ -4,7 +4,7 @@
 # -------------------------------------------------------------------------------------------
 
 import bpy
-from bpy.types import Object, Operator, TextCurve, VectorFont
+from bpy.types import Context, Object, Operator, Mesh, TextCurve, VectorFont
 import math
 from os import path
 
@@ -21,7 +21,7 @@ class TextMeshCreatorOperation(Operator):
             "TAB": "\t"
         }
 
-    def create_object(self, number: int, text: str, font: VectorFont, props: TextMeshCreatorProperties) -> bool:
+    def create_object(self, context: Context, number: int, text: str, font: VectorFont, props: TextMeshCreatorProperties) -> bool:
         font_curve: TextCurve = bpy.data.curves.new(type="FONT", name="Font Curve")
         font_curve.body = text
         font_curve.font = font
@@ -31,27 +31,35 @@ class TextMeshCreatorOperation(Operator):
         font_curve.space_character = props.character_spacing
         font_curve.space_word = props.word_spacing
 
-        font_object: Object = bpy.data.objects.new(name=text, object_data=font_curve)
-        font_object.location = (0, 0, 0)
-        font_object.rotation_euler.x = math.radians(props.rotation_x)
-        font_object.rotation_euler.y = math.radians(props.rotation_y)
-        font_object.rotation_euler.z = math.radians(props.rotation_z)
-        font_object.scale.x = props.scale_x
-        font_object.scale.y = props.scale_y
-        font_object.scale.z = props.scale_z
+        font_object_o: Object = bpy.data.objects.new(name="OBJECT", object_data=font_curve)
+        bpy.context.scene.collection.objects.link(font_object_o)
 
-        bpy.context.scene.collection.objects.link(font_object)
+        depsgraph = context.evaluated_depsgraph_get()
+        object_eval = font_object_o.evaluated_get(depsgraph=depsgraph)
+
+        font_mesh: Mesh = bpy.data.meshes.new_from_object(object_eval)
+        font_object_f: Object = bpy.data.objects.new(name=text, object_data=font_mesh)
+        font_object_f.location = (0, 0, 0)
+        font_object_f.rotation_euler.x = math.radians(props.rotation_x)
+        font_object_f.rotation_euler.y = math.radians(props.rotation_y)
+        font_object_f.rotation_euler.z = math.radians(props.rotation_z)
+        font_object_f.scale.x = props.scale_x
+        font_object_f.scale.y = props.scale_y
+        font_object_f.scale.z = props.scale_z
+
+        bpy.context.scene.collection.objects.link(font_object_f)
+        bpy.context.scene.collection.objects.unlink(font_object_o)
 
         override = bpy.context.copy()
-        override["selected_editable_objects"] = [font_object]
+        override["selected_editable_objects"] = [font_object_f]
         bpy.ops.object.origin_set(override, type="ORIGIN_GEOMETRY", center="BOUNDS")
 
         if props.center_to_origin:
-            font_object.location = (0, 0, 0)
+            font_object_f.location = (0, 0, 0)
 
         try:
             override = bpy.context.copy()
-            override["selected_objects"] = [font_object]
+            override["selected_objects"] = [font_object_f]
             filename = "%s-%s.fbx" % (number, text)
 
             print(path.join(props.export_path, filename))
@@ -94,7 +102,7 @@ class TextMeshCreatorOperation(Operator):
         finally:
             # cleanup
             override = bpy.context.copy()
-            override["selected_objects"] = [font_object]
+            override["selected_objects"] = [font_object_f]
             bpy.ops.object.delete(override)
 
     def execute(self, context):
@@ -112,12 +120,12 @@ class TextMeshCreatorOperation(Operator):
         if props.separate_by == "CHARACTER":
             characters = list(props.strings)
             for character in characters:
-                number = self.create_object(number, character, font, props)
+                number = self.create_object(context, number, character, font, props)
         elif props.separate_by != "NONE":
             characters = props.strings.split(self.separators()[props.separate_by])
             for character in characters:
-                number = self.create_object(number, character, font, props)
+                number = self.create_object(context, number, character, font, props)
         else:
-            number = self.create_object(number, props.strings, font, props)
+            number = self.create_object(context, number, props.strings, font, props)
 
         return {"FINISHED"}
