@@ -63,8 +63,6 @@ class TextMeshCreatorProperties(PropertyGroup):
     # blendshape
     use_blendshape: BoolProperty(default=False, name="Use Blendshape",
                                  description="Move characters with Blendshapes", options={"HIDDEN"})
-    separate_by_loose_parts: BoolProperty(default=True, name="Separate by Loose Parts",
-                                          description="Separate character by loose parts", options={"HIDDEN"})
     blendshape_min_x: FloatProperty(default=0.0, name="Blendshape Move Min X",
                                     description="Blendshape offsets for moving to X", options={"HIDDEN"})
     blendshape_max_x: FloatProperty(default=0.0, name="Blendshape Move Max X",
@@ -82,6 +80,8 @@ class TextMeshCreatorProperties(PropertyGroup):
     use_decimate: BoolProperty(default=False, name="Use Decimate",
                                description="Set to True if using mesh decimate", options={"HIDDEN"})
     decimate_ratio: FloatProperty(default=0.5, name="Decimate Ratio", description="Decimate Ratio", options={"HIDDEN"})
+    separate_by_loose_parts: BoolProperty(default=True, name="Separate by Loose Parts",
+                                          description="Separate character by loose parts", options={"HIDDEN"})
     center_to_origin: BoolProperty(default=False, name="Center to Origin",
                                    description="Set to True if want to center of the text to be the origin", options={"HIDDEN"})
 

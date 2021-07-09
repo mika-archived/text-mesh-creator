@@ -49,7 +49,6 @@ class TextMeshCreatorUI(Panel):
 
         col_blendshape = column.column()
         col_blendshape.enabled = props.use_blendshape
-        col_blendshape.prop(props, "separate_by_loose_parts")
         col_blendshape.prop(props, "blendshape_min_x")
         col_blendshape.prop(props, "blendshape_max_x")
         col_blendshape.prop(props, "blendshape_min_y")
@@ -65,6 +64,7 @@ class TextMeshCreatorUI(Panel):
         col_decimate.enabled = props.use_decimate
         col_decimate.prop(props, "decimate_ratio")
 
+        column.prop(props, "separate_by_loose_parts")
         column.prop(props, "center_to_origin")
 
         column.separator()

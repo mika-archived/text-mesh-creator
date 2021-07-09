@@ -3,9 +3,11 @@
 #  Licensed under the MIT License. See LICENSE in the project root for license information.
 # -------------------------------------------------------------------------------------------
 
+from typing import List
 import bpy
 from bpy.types import Context, Object, Operator, Mesh, TextCurve, VectorFont
 import math
+from mathutils import Vector
 from os import path
 
 from .properties import TextMeshCreatorProperties
@@ -20,6 +22,84 @@ class TextMeshCreatorOperation(Operator):
             "SPACE": " ",
             "TAB": "\t"
         }
+
+    def export_object(self, number: int, name: str, dirpath: str, object: List[Object]) -> int:
+        try:
+            override = bpy.context.copy()
+            override["selected_objects"] = object
+            filename = "%s-%s.fbx" % (number, name)
+
+            bpy.ops.export_scene.fbx(override,
+                                     filepath=path.join(dirpath, filename),
+                                     check_existing=True,
+                                     filter_glob="*.fbx",
+                                     use_selection=True,
+                                     use_active_collection=False,
+                                     global_scale=1.0,
+                                     apply_unit_scale=True,
+                                     apply_scale_options="FBX_SCALE_NONE",
+                                     bake_space_transform=False,
+                                     object_types={"ARMATURE", "MESH", "OTHER"},
+                                     use_mesh_modifiers=False,
+                                     use_mesh_modifiers_render=False,
+                                     mesh_smooth_type="OFF",
+                                     use_subsurf=False,
+                                     use_mesh_edges=False,
+                                     use_tspace=False,
+                                     use_custom_props=False,
+                                     add_leaf_bones=False,
+                                     primary_bone_axis="Y",
+                                     secondary_bone_axis="X",
+                                     use_armature_deform_only=False,
+                                     armature_nodetype="NULL",
+                                     bake_anim=False,
+                                     path_mode="AUTO",
+                                     embed_textures=False,
+                                     batch_mode="OFF",
+                                     use_metadata=True,
+                                     axis_forward="-Z",
+                                     axis_up="Y"
+                                     )
+            return number + 1
+        except RuntimeError as e:
+            print(e)
+            return number
+        finally:
+            # cleanup
+            override = bpy.context.copy()
+            override["selected_objects"] = object
+            bpy.ops.object.delete(override)
+
+    def separate_by_loose_parts(self, object: Object, extrude: float) -> List[Object]:
+        override = bpy.context.copy()
+        override["selected_editable_objects"] = [object]
+        bpy.ops.mesh.separate(override, type="LOOSE")  # override context.selected_objects
+
+        separated_objects = [object] + bpy.context.selected_objects
+        objects = []
+
+        for object in separated_objects:
+            override = bpy.context.copy()
+            override["selected_editable_objects"] = [object]
+
+            center = 0.125 * sum((Vector(bound) for bound in object.bound_box), Vector())
+            origin = object.matrix_world @ center
+            # bpy.ops.object.origin_set(override, type="ORIGIN_GEOMETRY", center="BOUNDS")
+
+            if not math.isclose(origin.y, extrude, rel_tol=1e-5):
+                bpy.context.scene.collection.objects.unlink(object)
+                continue
+
+            override = bpy.context.copy()
+            override["object"] = object
+            bpy.ops.object.modifier_add(override, type="SOLIDIFY")
+
+            object.modifiers[0].thickness = extrude * 2
+
+            bpy.ops.object.modifier_apply(override, modifier=object.modifiers[0].name)
+            objects.append(object)
+
+        return objects
 
     def create_object(self, context: Context, number: int, text: str, font: VectorFont, props: TextMeshCreatorProperties) -> bool:
         font_curve: TextCurve = bpy.data.curves.new(type="FONT", name="Font Curve")
@@ -66,51 +146,11 @@ class TextMeshCreatorOperation(Operator):
 
             bpy.ops.object.modifier_apply(override, modifier=font_object_f.modifiers[0].name)
 
-        try:
-            override = bpy.context.copy()
-            override["selected_objects"] = [font_object_f]
-            filename = "%s-%s.fbx" % (number, text)
+        if props.separate_by_loose_parts:
+            objects = self.separate_by_loose_parts(font_object_f, props.thickness)
+            return self.export_object(number, text, props.export_path, objects)
 
-            bpy.ops.export_scene.fbx(override,
-                                     filepath=path.join(props.export_path, filename),
-                                     check_existing=True,
-                                     filter_glob="*.fbx",
-                                     use_selection=True,
-                                     use_active_collection=False,
-                                     global_scale=1.0,
-                                     apply_unit_scale=True,
-                                     apply_scale_options="FBX_SCALE_NONE",
-                                     bake_space_transform=False,
-                                     object_types={"ARMATURE", "MESH", "OTHER"},
-                                     use_mesh_modifiers=False,
-                                     use_mesh_modifiers_render=False,
-                                     mesh_smooth_type="OFF",
-                                     use_subsurf=False,
-                                     use_mesh_edges=False,
-                                     use_tspace=False,
-                                     use_custom_props=False,
-                                     add_leaf_bones=False,
-                                     primary_bone_axis="Y",
-                                     secondary_bone_axis="X",
-                                     use_armature_deform_only=False,
-                                     armature_nodetype="NULL",
-                                     bake_anim=False,
-                                     path_mode="AUTO",
-                                     embed_textures=False,
-                                     batch_mode="OFF",
-                                     use_metadata=True,
-                                     axis_forward="-Z",
-                                     axis_up="Y"
-                                     )
-            return number + 1
-        except RuntimeError as e:
-            print(e)
-            return number
-        finally:
-            # cleanup
-            override = bpy.context.copy()
-            override["selected_objects"] = [font_object_f]
-            bpy.ops.object.delete(override)
+        return self.export_object(number, text, props.export_path, [font_object_f])
 
     def execute(self, context):
         props: TextMeshCreatorProperties = context.scene.TextMeshCreatorProperties
