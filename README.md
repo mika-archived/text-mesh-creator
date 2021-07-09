@@ -8,12 +8,12 @@ This is a alternative implementation of [this add-on](https://booth.pm/ja/items/
 | Parameter Name       | Type    | Default        | Description                                                                              |
 | -------------------- | ------- | -------------- | ---------------------------------------------------------------------------------------- |
 | Strings              | `str`   | `(null)`       | Strings to be generated                                                                  |
-| Rotation X           | `float` | `90.0`         | `Rotation X for Text (Modifies are not Recommended)                                      |
-| Rotation Y           | `float` | `0.0`          | `Rotation Y for Text (Modifies are not Recommended)                                      |
-| Rotation Z           | `float` | `180.0`        | `Rotation Z for Text (Modifies are not Recommended)                                      |
-| Scale X              | `float` | `1.0`          | `Scale X for Text                                                                        |
-| Scale Y              | `float` | `1.0`          | `Scale Y for Text                                                                        |
-| Scale Z              | `float` | `1.0`          | `Scale Z for Text                                                                        |
+| Rotation X           | `float` | `90.0`         | Rotation X for Text (Modifies are not Recommended)                                       |
+| Rotation Y           | `float` | `0.0`          | Rotation Y for Text (Modifies are not Recommended)                                       |
+| Rotation Z           | `float` | `180.0`        | Rotation Z for Text (Modifies are not Recommended)                                       |
+| Scale X              | `float` | `1.0`          | Scale X for Text                                                                         |
+| Scale Y              | `float` | `1.0`          | Scale Y for Text                                                                         |
+| Scale Z              | `float` | `1.0`          | Scale Z for Text                                                                         |
 | Font Path            | `str`   | `(null)`       | Font used for mesh generation                                                            |
 | Separate By          | `enum`  | `NONE`         | How to separate strings (Space, Tab, Character, or None)                                 |
 | Thickness            | `float` | `0.1`          | Thickness of mesh to be generated                                                        |
