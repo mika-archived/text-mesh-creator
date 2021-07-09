@@ -21,6 +21,8 @@ This is a alternative implementation of [this add-on](https://booth.pm/ja/items/
 | Vertical Alignment   | `enum`  | `TOP_BASELINE` | Vertical Alignment for Paragraph (Top Baseline, Top, Center, Bottom, or Bottom Baseline) |
 | Character Spacing    | `float` | `1.2`          | Spaces between characters (ignored for separated by character)                           |
 | Word Spacing         | `float` | `0.2`          | Space between words (ignored for separated by character or tab)                          |
+| Use Decimate         | `bool`  | `False`        | Set to True if using mesh decimate                                                       |
+| Decimate Ratio       | `float` | `0.5`          | Decimate Ratio                                                                           |
 | Center to Origin     | `bool`  | `False`        | Set to True if want to center of the text to be the origin                               |
 | Increment From       | `int`   | `0`            | Offset value of serial number for output file                                            |
 | Export Directory     | `str`   | `(null)`       | Export FBX to base directory path                                                        |
@@ -37,6 +39,4 @@ This is a alternative implementation of [this add-on](https://booth.pm/ja/items/
 | Blendshape Max Y        | `float` | `0.0`   | Blendshape offsets for moving to Y                                  |
 | Blendshape Min Z        | `float` | `0.0`   | Blendshape offsets for moving to Z                                  |
 | Blendshape Max Z        | `float` | `0.0`   | Blendshape offsets for moving to Z                                  |
-| Use Decimate            | `bool`  | `False` | Set to True if using mesh decimate                                  |
-| Decimate Ratio          | `float` | `0.5`   | Decimate Ratio                                                      |
 | Inline FBX              | `bool`  | `False` | Set to True if export multiple separated character(s) as single FBX |

@@ -57,12 +57,19 @@ class TextMeshCreatorOperation(Operator):
         if props.center_to_origin:
             font_object_f.location = (0, 0, 0)
 
+        if props.use_decimate:
+            override = bpy.context.copy()
+            override["object"] = font_object_f
+            bpy.ops.object.modifier_add(override, type="DECIMATE")
+
+            font_object_f.modifiers[0].ratio = props.decimate_ratio
+
+            bpy.ops.object.modifier_apply(override, modifier=font_object_f.modifiers[0].name)
+
         try:
             override = bpy.context.copy()
             override["selected_objects"] = [font_object_f]
             filename = "%s-%s.fbx" % (number, text)
-
-            print(path.join(props.export_path, filename))
 
             bpy.ops.export_scene.fbx(override,
                                      filepath=path.join(props.export_path, filename),
