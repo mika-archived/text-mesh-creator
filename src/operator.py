@@ -79,9 +79,6 @@ class TextMeshCreatorOperation(Operator):
         objects = []
 
         for object in separated_objects:
-            override = bpy.context.copy()
-            override["selected_editable_objects"] = [object]
-
             center = 0.125 * sum((Vector(bound) for bound in object.bound_box), Vector())
             origin = object.matrix_world @ center
 
