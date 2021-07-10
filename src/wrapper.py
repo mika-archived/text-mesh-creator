@@ -3,7 +3,7 @@
 #  Licensed under the MIT License. See LICENSE in the project root for license information.
 # -------------------------------------------------------------------------------------------
 
-from typing import Any, List, overload
+from typing import Any, List
 
 from bpy import ops
 from bpy.types import Context, Object
