@@ -3,6 +3,20 @@
 Blender add-on for creating 3D Text Objects from strings.  
 This is a alternative implementation of [this add-on](https://booth.pm/ja/items/1580053).
 
+## Installation
+
+1. Download Installation Archive from [BOOTH]().
+2. Open the Preferences window and select `Add-ons` tab
+3. Press `Install` button, select downloaded zip-archive and select `Install Add-on`
+4. Select `Community` tab and enable `Generic: TextMeshCreator`
+
+## How to use
+
+1. Open `Layout` , `Modeling` or other 3D View
+2. Expand sidebar and select `TextMesh Creator`
+3. Configure strings, fonts, directory and other options
+4. Press `Generate` button
+
 ## Available Parameters (Features)
 
 | Parameter Name          | Type    | Default        | Description                                                                              |
@@ -34,3 +48,7 @@ This is a alternative implementation of [this add-on](https://booth.pm/ja/items/
 | Parameter Name | Type   | Default | Description                                                         |
 | -------------- | ------ | ------- | ------------------------------------------------------------------- |
 | Inline FBX     | `bool` | `False` | Set to True if export multiple separated character(s) as single FBX |
+
+## License
+
+MIT by [@6jz](https://twitter.com)
