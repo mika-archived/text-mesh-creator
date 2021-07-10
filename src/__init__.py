@@ -20,10 +20,12 @@ if "bpy" in locals():
     importlib.reload(operator)
     importlib.reload(properties)
     importlib.reload(ui)
+    importlib.reload(wrapper)
 else:
     from . import operator
     from . import properties
     from . import ui
+    from . import wrapper
 
     import bpy
     from bpy.props import PointerProperty

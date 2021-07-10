@@ -5,12 +5,13 @@
 
 from typing import List
 import bpy
-from bpy.types import Context, Object, Operator, VectorFont
+from bpy.types import Object, Operator, VectorFont
 import math
 from mathutils import Vector
 from os import path
 
 from .properties import TextMeshCreatorProperties
+from .wrapper import OperationWrapper
 
 
 class TextMeshCreatorOperation(Operator):
@@ -23,57 +24,20 @@ class TextMeshCreatorOperation(Operator):
             "TAB": "\t"
         }
 
-    def export_object(self, number: int, name: str, dirpath: str, object: List[Object]) -> int:
+    def export_object(self, number: int, name: str, dirpath: str, objects: List[Object]) -> int:
         try:
-            override = bpy.context.copy()
-            override["selected_objects"] = object
             filename = "%s-%s.fbx" % (number, name)
 
-            bpy.ops.export_scene.fbx(override,
-                                     filepath=path.join(dirpath, filename),
-                                     check_existing=True,
-                                     filter_glob="*.fbx",
-                                     use_selection=True,
-                                     use_active_collection=False,
-                                     global_scale=1.0,
-                                     apply_unit_scale=True,
-                                     apply_scale_options="FBX_SCALE_ALL",
-                                     bake_space_transform=False,
-                                     object_types={"ARMATURE", "MESH", "OTHER"},
-                                     use_mesh_modifiers=False,
-                                     use_mesh_modifiers_render=False,
-                                     mesh_smooth_type="OFF",
-                                     use_subsurf=False,
-                                     use_mesh_edges=False,
-                                     use_tspace=False,
-                                     use_custom_props=False,
-                                     add_leaf_bones=False,
-                                     primary_bone_axis="Y",
-                                     secondary_bone_axis="X",
-                                     use_armature_deform_only=False,
-                                     armature_nodetype="NULL",
-                                     bake_anim=False,
-                                     path_mode="AUTO",
-                                     embed_textures=False,
-                                     batch_mode="OFF",
-                                     use_metadata=True,
-                                     axis_forward="-Z",
-                                     axis_up="Y"
-                                     )
+            OperationWrapper.export_fbx(context=bpy.context, filepath=path.join(dirpath, filename), objects=objects)
             return number + 1
         except RuntimeError as e:
             print(e)
             return number
         finally:
-            # cleanup
-            override = bpy.context.copy()
-            override["selected_objects"] = object
-            bpy.ops.object.delete(override)
+            OperationWrapper.delete_object(context=bpy.context, objects=objects)
 
     def separate_by_loose_parts(self, object: Object, extrude: float) -> List[Object]:
-        override = bpy.context.copy()
-        override["selected_editable_objects"] = [object]
-        bpy.ops.mesh.separate(override, type="LOOSE")  # override context.selected_objects
+        OperationWrapper.separate_object(context=bpy.context, objects=[object], type="LOOSE")
 
         separated_objects = bpy.context.selected_objects
         objects = []
@@ -83,45 +47,26 @@ class TextMeshCreatorOperation(Operator):
             origin = object.matrix_world @ center
 
             if not math.isclose(origin.y, extrude, rel_tol=1e-5):
-                override = bpy.context.copy()
-                override["selected_objects"] = [object]
-                bpy.ops.object.delete(override, confirm=False)
+                OperationWrapper.delete_object(context=bpy.context, objects=[object])
                 continue
 
-            override = bpy.context.copy()
-            override["object"] = object
-            bpy.ops.object.modifier_add(override, type="SOLIDIFY")
+            objects.append(object)
 
-            object.modifiers[0].thickness = extrude * 2
         # bulk edit
         bpy.ops.object.mode_set(mode="EDIT")
         bpy.ops.mesh.select_mode(type="FACE")
 
-            bpy.ops.object.modifier_apply(override, modifier=object.modifiers[0].name)
-            objects.append(object)
-        override = bpy.context.copy()
-        override["selected_editable_objects"] = objects
-        bpy.ops.mesh.select_all(override, action="SELECT")
-
-        override = bpy.context.copy()
-        override["selected_editable_objects"] = objects
-        bpy.ops.mesh.extrude_region_move(override, TRANSFORM_OT_translate={"value": [0, -(extrude * 2), 0]})
-
-        override = bpy.context.copy()
-        override["selected_editable_objects"] = objects
-        bpy.ops.mesh.select_all(override, action="SELECT")
-
-        override = bpy.context.copy()
-        override["selected_editable_objects"] = objects
-        bpy.ops.mesh.normals_make_consistent(override, inside=False)
+        OperationWrapper.select_all_in_mesh(context=bpy.context, objects=objects)
+        OperationWrapper.extrude_region_move(context=bpy.context, objects=objects,
+                                             transform={"value": [0, -(extrude * 2), 0]})
+        OperationWrapper.select_all_in_mesh(context=bpy.context, objects=objects)
+        OperationWrapper.make_normals_consistent(context=bpy.context, objects=objects, inside=False)
 
         bpy.ops.object.mode_set(mode="OBJECT")
 
-        override = bpy.context.copy()
-
         return objects
 
-    def create_object(self, context: Context, number: int, text: str, font: VectorFont, props: TextMeshCreatorProperties) -> bool:
+    def create_object(self, number: int, text: str, font: VectorFont, props: TextMeshCreatorProperties) -> bool:
         rotation = (math.radians(props.rotation_x), math.radians(props.rotation_y), math.radians(props.rotation_z))
 
         # I can't find a way to get the ObjectBase in here :(
@@ -149,21 +94,19 @@ class TextMeshCreatorOperation(Operator):
         font_object_f.scale.y = props.scale_y
         font_object_f.scale.z = props.scale_z
 
-        override = bpy.context.copy()
-        override["selected_editable_objects"] = [font_object_f]
-        bpy.ops.object.origin_set(override, type="ORIGIN_GEOMETRY", center="BOUNDS")
+        OperationWrapper.set_origin(context=bpy.context, objects=[font_object_f],
+                                    type="ORIGIN_GEOMETRY", center="BOUNDS")
 
         if props.center_to_origin:
             font_object_f.location = (0, 0, 0)
 
         if props.use_decimate:
-            override = bpy.context.copy()
-            override["object"] = font_object_f
-            bpy.ops.object.modifier_add(override, type="DECIMATE")
+            OperationWrapper.add_modifier(context=bpy.context, object=font_object_f, type="DECIMATE")
 
             font_object_f.modifiers[0].ratio = props.decimate_ratio
 
-            bpy.ops.object.modifier_apply(override, modifier=font_object_f.modifiers[0].name)
+            OperationWrapper.apply_modifier(context=bpy.context, object=font_object_f,
+                                            modifier=font_object_f.modifiers[0].name)
 
         if props.separate_by_loose_parts:
             objects = self.separate_by_loose_parts(font_object_f, props.thickness)
@@ -200,6 +143,6 @@ class TextMeshCreatorOperation(Operator):
             characters = [characters[0]]
 
         for character in characters:
-            number = self.create_object(context, number, character, font, props)
+            number = self.create_object(number, character, font, props)
 
         return {"FINISHED"}
