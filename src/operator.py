@@ -75,7 +75,7 @@ class TextMeshCreatorOperation(Operator):
         override["selected_editable_objects"] = [object]
         bpy.ops.mesh.separate(override, type="LOOSE")  # override context.selected_objects
 
-        separated_objects = [object] + bpy.context.selected_objects
+        separated_objects = bpy.context.selected_objects
         objects = []
 
         for object in separated_objects:
@@ -84,10 +84,11 @@ class TextMeshCreatorOperation(Operator):
 
             center = 0.125 * sum((Vector(bound) for bound in object.bound_box), Vector())
             origin = object.matrix_world @ center
-            # bpy.ops.object.origin_set(override, type="ORIGIN_GEOMETRY", center="BOUNDS")
 
             if not math.isclose(origin.y, extrude, rel_tol=1e-5):
-                bpy.context.scene.collection.objects.unlink(object)
+                override = bpy.context.copy()
+                override["selected_objects"] = [object]
+                bpy.ops.object.delete(override, confirm=False)
                 continue
 
             override = bpy.context.copy()
