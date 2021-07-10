@@ -93,9 +93,31 @@ class TextMeshCreatorOperation(Operator):
             bpy.ops.object.modifier_add(override, type="SOLIDIFY")
 
             object.modifiers[0].thickness = extrude * 2
+        # bulk edit
+        bpy.ops.object.mode_set(mode="EDIT")
+        bpy.ops.mesh.select_mode(type="FACE")
 
             bpy.ops.object.modifier_apply(override, modifier=object.modifiers[0].name)
             objects.append(object)
+        override = bpy.context.copy()
+        override["selected_editable_objects"] = objects
+        bpy.ops.mesh.select_all(override, action="SELECT")
+
+        override = bpy.context.copy()
+        override["selected_editable_objects"] = objects
+        bpy.ops.mesh.extrude_region_move(override, TRANSFORM_OT_translate={"value": [0, -(extrude * 2), 0]})
+
+        override = bpy.context.copy()
+        override["selected_editable_objects"] = objects
+        bpy.ops.mesh.select_all(override, action="SELECT")
+
+        override = bpy.context.copy()
+        override["selected_editable_objects"] = objects
+        bpy.ops.mesh.normals_make_consistent(override, inside=False)
+
+        bpy.ops.object.mode_set(mode="OBJECT")
+
+        override = bpy.context.copy()
 
         return objects
 
