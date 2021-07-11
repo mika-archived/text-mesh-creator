@@ -68,21 +68,6 @@ class TextMeshCreatorOperation(Operator):
 
         return objects
 
-    def set_origin_to_bottom(self, object: Object) -> None:
-        data = object.data
-        matrix = object.matrix_world
-
-        vertexes = (Vector(v) for v in object.bound_box)
-        coords = np.array([matrix @ v for v in vertexes])
-        z = coords.T[2]
-        mins = np.take(coords, np.where(z == z.min())[0], axis=0)
-
-        o = Vector(np.mean(mins, axis=0))
-        o = matrix.inverted() @ o
-
-        data.transform(Matrix.Translation(-o))
-        matrix.translation = matrix @ o
-
     def create_object(self, number: int, text: str, font: VectorFont, props: TextMeshCreatorProperties) -> bool:
         rotation = (math.radians(props.rotation_x), math.radians(props.rotation_y), math.radians(props.rotation_z))
 
@@ -110,8 +95,6 @@ class TextMeshCreatorOperation(Operator):
         font_object_f.scale.x = props.scale_x
         font_object_f.scale.y = props.scale_y
         font_object_f.scale.z = props.scale_z
-
-        self.set_origin_to_bottom(font_object_f)
 
         if props.center_to_origin:
             font_object_f.location = (0, 0, 0)
