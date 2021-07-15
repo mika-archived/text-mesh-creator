@@ -3,7 +3,9 @@
 #  Licensed under the MIT License. See LICENSE in the project root for license information.
 # -------------------------------------------------------------------------------------------
 
-from typing import Any, List
+from __future__ import annotations
+
+from typing import Any
 
 from bpy import ops
 from bpy.types import Context, Object
@@ -12,7 +14,7 @@ from bpy.types import Context, Object
 class OperationWrapper:
 
     @staticmethod
-    def export_fbx(context: Context, filepath: str, objects: List[Object]) -> None:
+    def export_fbx(context: Context, filepath: str, objects: list[Object]) -> None:
         override = context.copy()
         override["selected_objects"] = objects
 
@@ -50,37 +52,37 @@ class OperationWrapper:
         )
 
     @staticmethod
-    def delete_object(context: Context, objects: List[Object]) -> None:
+    def delete_object(context: Context, objects: list[Object]) -> None:
         override = context.copy()
         override["selected_objects"] = objects
         ops.object.delete(override, confirm=False)
 
     @staticmethod
-    def separate_object(context: Context, objects: List[Object], type: str) -> None:
+    def separate_object(context: Context, objects: list[Object], type: str) -> None:
         override = context.copy()
         override["selected_editable_objects"] = objects
         ops.mesh.separate(override, type=type)
 
     @staticmethod
-    def extrude_region_move(context: Context, objects: List[Object], transform: Any = None) -> None:
+    def extrude_region_move(context: Context, objects: list[Object], transform: Any = None) -> None:
         override = context.copy()
         override["selected_editable_objects"] = objects
         ops.mesh.extrude_region_move(override, TRANSFORM_OT_translate=transform)
 
     @staticmethod
-    def set_origin(context: Context, objects: List[Object], type: str, center: str) -> None:
+    def set_origin(context: Context, objects: list[Object], type: str, center: str) -> None:
         override = context.copy()
         override["selected_editable_objects"] = objects
         ops.object.origin_set(override, type=type, center=center)
 
     @staticmethod
-    def select_all_in_mesh(context: Context, objects: List[Object]) -> None:
+    def select_all_in_mesh(context: Context, objects: list[Object]) -> None:
         override = context.copy()
         override["selected_editable_objects"] = objects
         ops.mesh.select_all(override, action="SELECT")
 
     @staticmethod
-    def make_normals_consistent(context: Context, objects: List[Object], inside: bool) -> None:
+    def make_normals_consistent(context: Context, objects: list[Object], inside: bool) -> None:
         override = context.copy()
         override["selected_editable_objects"] = objects
         ops.mesh.normals_make_consistent(override, inside=inside)

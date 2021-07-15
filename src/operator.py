@@ -3,11 +3,12 @@
 #  Licensed under the MIT License. See LICENSE in the project root for license information.
 # -------------------------------------------------------------------------------------------
 
+from __future__ import annotations
+
 import bpy
 import math
 import numpy as np
 
-from typing import List
 from bpy.types import Object, Operator, VectorFont
 from os import path
 
@@ -25,7 +26,7 @@ class TextMeshCreatorOperation(Operator):
             "TAB": "\t"
         }
 
-    def export_object(self, number: int, name: str, dirpath: str, objects: List[Object]) -> int:
+    def export_object(self, number: int, name: str, dirpath: str, objects: list[Object]) -> int:
         try:
             filename = "%s-%s.fbx" % (number, name)
 
@@ -37,7 +38,7 @@ class TextMeshCreatorOperation(Operator):
         finally:
             OperationWrapper.delete_object(context=bpy.context, objects=objects)
 
-    def separate_by_loose_parts(self, object: Object, rotation: List[float], extrude: float) -> List[Object]:
+    def separate_by_loose_parts(self, object: Object, rotation: list[float], extrude: float) -> list[Object]:
         OperationWrapper.separate_object(context=bpy.context, objects=[object], type="LOOSE")
 
         separated_objects = bpy.context.selected_objects
