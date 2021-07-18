@@ -20,11 +20,13 @@ if "bpy" in locals():
     importlib.reload(operator)
     importlib.reload(properties)
     importlib.reload(ui)
+    importlib.reload(utils)
     importlib.reload(wrapper)
 else:
     from . import operator
     from . import properties
     from . import ui
+    from . import utils
     from . import wrapper
 
     import bpy

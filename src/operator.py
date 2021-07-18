@@ -13,6 +13,7 @@ from bpy.types import Object, Operator, VectorFont
 from os import path
 
 from .properties import TextMeshCreatorProperties
+from .utils import replace_invalid_filename_chars
 from .wrapper import OperationWrapper
 
 
@@ -28,9 +29,10 @@ class TextMeshCreatorOperation(Operator):
 
     def export_object(self, number: int, name: str, dirpath: str, objects: list[Object]) -> int:
         try:
-            filename = "%s-%s.fbx" % (number, name)
+            filename = replace_invalid_filename_chars("%s-%s.fbx" % (number, name))
+            filepath = path.join(dirpath, filename)
 
-            OperationWrapper.export_fbx(context=bpy.context, filepath=path.join(dirpath, filename), objects=objects)
+            OperationWrapper.export_fbx(context=bpy.context, filepath=filepath, objects=objects)
             return number + 1
         except RuntimeError as e:
             print(e)
