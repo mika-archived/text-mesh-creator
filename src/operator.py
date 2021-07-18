@@ -201,7 +201,11 @@ class TextMeshCreatorOperation(Operator):
         if props.separate_by == "CHARACTER":
             characters = list(props.strings)
         elif props.separate_by != "NONE":
-            characters = props.strings.split(self.separators()[props.separate_by])
+            strings: str = props.strings
+            if props.separate_by == "SPACE":
+                strings = strings.replace("　", " ")
+
+            characters = strings.split(self.separators()[props.separate_by])
         else:
             characters = [props.strings]
 
