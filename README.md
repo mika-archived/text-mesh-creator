@@ -1,7 +1,8 @@
 # Blender Add-on: TextMesh Creator
 
 Blender add-on for creating 3D Text Objects from strings.  
-This is a alternative implementation of [this add-on](https://booth.pm/ja/items/1580053).
+This is a alternative implementation of [this add-on](https://booth.pm/ja/items/1580053).  
+However, this implementation works with Blender 2.9x and is independent of the UI locale.
 
 ## Installation
 
