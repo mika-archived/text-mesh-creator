@@ -5,7 +5,7 @@ This is a alternative implementation of [this add-on](https://booth.pm/ja/items/
 
 ## Installation
 
-1. Download Installation Archive from [BOOTH]().
+1. Download Installation Archive from [BOOTH](https://natsuneko.booth.pm/items/3110204).
 2. Open the Preferences window and select `Add-ons` tab
 3. Press `Install` button, select downloaded zip-archive and select `Install Add-on`
 4. Select `Community` tab and enable `Generic: TextMeshCreator`
