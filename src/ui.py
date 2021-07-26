@@ -47,14 +47,14 @@ class TextMeshCreatorUI(Panel):
         column.label(text="Blendshape")
         column.prop(props, "use_blendshape")
 
-        col_blendshape = column.column()
-        col_blendshape.enabled = props.use_blendshape
-        col_blendshape.prop(props, "blendshape_min_x")
-        col_blendshape.prop(props, "blendshape_max_x")
-        col_blendshape.prop(props, "blendshape_min_y")
-        col_blendshape.prop(props, "blendshape_max_y")
-        col_blendshape.prop(props, "blendshape_min_z")
-        col_blendshape.prop(props, "blendshape_max_z")
+        # col_blendshape = column.column()
+        # col_blendshape.enabled = props.use_blendshape
+        # col_blendshape.prop(props, "blendshape_min_x")
+        # col_blendshape.prop(props, "blendshape_max_x")
+        # col_blendshape.prop(props, "blendshape_min_y")
+        # col_blendshape.prop(props, "blendshape_max_y")
+        # col_blendshape.prop(props, "blendshape_min_z")
+        # col_blendshape.prop(props, "blendshape_max_z")
 
         column.separator()
         column.label(text="Mesh")
