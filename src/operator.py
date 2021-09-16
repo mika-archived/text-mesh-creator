@@ -108,7 +108,7 @@ class TextMeshCreatorOperation(Operator):
 
                 r = np.linalg.det(matrix)
 
-                vertices.append(math.isclose(r, 0, abs_tol=1e-5))
+                vertices.append(math.isclose(r, 0, abs_tol=1e-4))
 
             if not all(vertices):
                 OperationWrapper.delete_object(context=bpy.context, objects=[object])
