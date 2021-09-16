@@ -49,6 +49,7 @@ class TextMeshCreatorProperties(PropertyGroup):
                               description="How to separate strings", options={"HIDDEN"})
 
     # text layout
+    size: FloatProperty(default=1.0, name="Size", description="Font Size of mesh to be generated", options={"HIDDEN"})
     thickness: FloatProperty(default=0.1, name="Thickness",
                              description="Thickness of mesh to be generated", options={"HIDDEN"})
     horizontal_alignment: EnumProperty(default=0, items=align_x, name="Horizontal Alignment",

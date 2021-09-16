@@ -37,6 +37,7 @@ class TextMeshCreatorUI(Panel):
 
         column.separator()
         column.label(text="Text Layout")
+        column.prop(props, "size")
         column.prop(props, "thickness")
         column.prop(props, "horizontal_alignment")
         column.prop(props, "vertical_alignment")

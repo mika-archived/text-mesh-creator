@@ -146,6 +146,7 @@ class TextMeshCreatorOperation(Operator):
         font_object_o.data.name = "CURVE"
         font_object_o.data.body = text
         font_object_o.data.font = font
+        font_object_o.data.size = props.size
         font_object_o.data.extrude = props.thickness
         font_object_o.data.align_x = props.horizontal_alignment
         font_object_o.data.align_y = props.vertical_alignment
