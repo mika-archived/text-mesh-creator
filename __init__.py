@@ -1,14 +1,14 @@
-# -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------
 #  Copyright (c) Natsuneko. All rights reserved.
-#  Licensed under the License Zero Parity 7.0.0 (see LICENSE-PARITY file) and MIT (contributions, see LICENSE-MIT file) with exception License Zero Patron 1.0.0 (see LICENSE-PATRON file)
-# -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#  Licensed under the MIT License. See LICENSE in the project root for license information.
+# ------------------------------------------------------------------------------------------
 
 
 bl_info = {
     "name": "TextMeshCreator",
     "author": "Natsuneko",
     "description": "Blender add-on for creating 3D Text Objects from strings",
-    "blender": (3, 0, 0),
+    "blender": (2, 90, 0),
     "version": (0, 0, 1),
     "location": "3D View > Sidebar > TextMesh Creator",
     "warning": "",
