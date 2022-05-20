@@ -8,7 +8,7 @@ bl_info = {
     "name": "TextMeshCreator",
     "author": "Natsuneko",
     "description": "Blender add-on for creating 3D Text Objects from strings",
-    "blender": (2, 90, 0),
+    "blender": (2, 80, 0),
     "version": (0, 0, 1),
     "location": "3D View > Sidebar > TextMesh Creator",
     "warning": "",
@@ -44,7 +44,8 @@ def register():
     for c in classes:
         bpy.utils.register_class(c)
 
-    bpy.types.Scene.TextMeshCreatorProperties = PointerProperty(type=properties.TextMeshCreatorProperties)
+    bpy.types.Scene.TextMeshCreatorProperties = PointerProperty(
+        type=properties.TextMeshCreatorProperties)
 
 
 def unregister():

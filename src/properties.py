@@ -22,39 +22,50 @@ class TextMeshCreatorProperties(PropertyGroup):
             ("CENTER", "Center", "Center text"),
             ("RIGHT", "Right", "Align text to the right"),
             ("JUSTIFY", "Justify", " Align to the left and the right"),
-            ("FLUSH", "Flush", "Align to the left and the right, with equal character spacing")
+            ("FLUSH", "Flush",
+             "Align to the left and the right, with equal character spacing")
         ]
 
     def align_y(self, context):
         return [
-            ("TOP_BASELINE", "Top Baseline", "Align to top but use the base-line of the text"),
+            ("TOP_BASELINE", "Top Baseline",
+             "Align to top but use the base-line of the text"),
             ("TOP", "Top", "Align text to the top"),
             ("CENTER", "Center", "Align text to the middle"),
             ("BOTTOM", "Bottom", "Align text to the bottom"),
-            ("BOTTOM_BASELINE", "Bottom Baseline", "Align text to the bottom but use the base-line of the text"),
+            ("BOTTOM_BASELINE", "Bottom Baseline",
+             "Align text to the bottom but use the base-line of the text"),
         ]
 
     # generic
-    strings: StringProperty(default="", name="Strings", description="Strings to be generated", options={"HIDDEN"})
-    rotation_x: FloatProperty(default=90.0, name="Rotation X", description="Rotation X for Text", options={"HIDDEN"})
-    rotation_y: FloatProperty(default=0.0, name="Rotation Y", description="Rotation Y for Text", options={"HIDDEN"})
-    rotation_z: FloatProperty(default=180.0, name="Rotation Z", description="Rotation Z for Text", options={"HIDDEN"})
-    scale_x: FloatProperty(default=1.0, name="Scale X", description="Scales X for Text", options={"HIDDEN"})
-    scale_y: FloatProperty(default=1.0, name="Scale Y", description="Scales Y for Text", options={"HIDDEN"})
-    scale_z: FloatProperty(default=1.0, name="Scale Z", description="Scales Z for Text", options={"HIDDEN"})
+    strings: StringProperty(default="", name="Strings",
+                            description="Strings to be generated", options={"HIDDEN"})
+    rotation_x: FloatProperty(default=90.0, name="Rotation X",
+                              description="Rotation X for Text", options={"HIDDEN"})
+    rotation_y: FloatProperty(default=0.0, name="Rotation Y",
+                              description="Rotation Y for Text", options={"HIDDEN"})
+    rotation_z: FloatProperty(default=180.0, name="Rotation Z",
+                              description="Rotation Z for Text", options={"HIDDEN"})
+    scale_x: FloatProperty(default=1.0, name="Scale X",
+                           description="Scales X for Text", options={"HIDDEN"})
+    scale_y: FloatProperty(default=1.0, name="Scale Y",
+                           description="Scales Y for Text", options={"HIDDEN"})
+    scale_z: FloatProperty(default=1.0, name="Scale Z",
+                           description="Scales Z for Text", options={"HIDDEN"})
 
     font_path: StringProperty(default="", name="Font", description="Font used for mesh generation",
                               subtype="FILE_PATH", options={"HIDDEN"})
-    separate_by: EnumProperty(default=3, items=separator_items, name="Separate By",
+    separate_by: EnumProperty(items=separator_items, name="Separate By",
                               description="How to separate strings", options={"HIDDEN"})
 
     # text layout
-    size: FloatProperty(default=1.0, name="Size", description="Font Size of mesh to be generated", options={"HIDDEN"})
+    size: FloatProperty(default=1.0, name="Size",
+                        description="Font Size of mesh to be generated", options={"HIDDEN"})
     thickness: FloatProperty(default=0.1, name="Thickness",
                              description="Thickness of mesh to be generated", options={"HIDDEN"})
-    horizontal_alignment: EnumProperty(default=0, items=align_x, name="Horizontal Alignment",
+    horizontal_alignment: EnumProperty(items=align_x, name="Horizontal Alignment",
                                        description="Horizontal Alignment for Paragraph", options={"HIDDEN"})
-    vertical_alignment: EnumProperty(default=0, items=align_y, name="Vertical Alignment",
+    vertical_alignment: EnumProperty(items=align_y, name="Vertical Alignment",
                                      description="Vertical Alignment for Paragraph", options={"HIDDEN"})
     character_spacing: FloatProperty(default=1.2, name="Character Spacing",
                                      description="Spaces between characters (ignored for separated by character)", options={"HIDDEN"})
@@ -80,7 +91,8 @@ class TextMeshCreatorProperties(PropertyGroup):
     # mesh
     use_decimate: BoolProperty(default=False, name="Use Decimate",
                                description="Set to True if using mesh decimate", options={"HIDDEN"})
-    decimate_ratio: FloatProperty(default=0.5, name="Decimate Ratio", description="Decimate Ratio", options={"HIDDEN"})
+    decimate_ratio: FloatProperty(
+        default=0.5, name="Decimate Ratio", description="Decimate Ratio", options={"HIDDEN"})
     separate_by_loose_parts: BoolProperty(default=True, name="Separate by Loose Parts",
                                           description="Separate character by loose parts", options={"HIDDEN"})
     center_to_origin: BoolProperty(default=False, name="Center to Origin",
