@@ -1,1 +1,1 @@
-fake-bpy-module-2.90==20210701
+fake-bpy-module-2.30==20211212
