@@ -2,7 +2,13 @@
 
 Blender add-on for creating 3D Text Objects from strings.
 This is a alternative implementation of [this add-on](https://booth.pm/ja/items/1580053).
-However, this implementation works with Blender 2.9x and is independent of the UI locale.
+However, this implementation works with Blender LTS and is independent of the UI locale.
+
+## Supports
+
+- Blender 2.8x (branch #2.8)
+- Blender 2.9x (branch #2.9 - old main)
+- Blender 3.0x (branch #3.0 - current main)
 
 ## Installation
 
@@ -52,10 +58,4 @@ However, this implementation works with Blender 2.9x and is independent of the U
 
 ## License
 
-This software is licensed under the License Zero Parity 7.0.0 and MIT license with exception License Zero Patron 1.0.0.
-This is the same as the license for Husky 5.0, and can be summarized as follows:
-
-- If you are using this software for open-source projects, you may use it under the terms of the MIT License.
-- If you are using this software for commercial projects, you may use it under the terms of the License Zero Parity 7.0.0.
-- If you are using this software for commercial projects, but you are supporting this project via GitHub Sponsors, Patreon, and others (monthly or yearly donations are supported), you may use it under the terms of the License Zero Patron 1.0.0.
-- If you are contributing to this project, you SHOULD compliant with the MIT License.
+This software is licensed under the MIT License.
