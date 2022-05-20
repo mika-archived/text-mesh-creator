@@ -56,6 +56,11 @@ However, this implementation works with Blender LTS and is independent of the UI
 | -------------- | ------ | ------- | ------------------------------------------------------------------- |
 | Inline FBX     | `bool` | `False` | Set to True if export multiple separated character(s) as single FBX |
 
+## How to debug
+
+1. Install Blender Development Addon **0.0.14** to VSCode.
+2. `>Blender: Build and Start`
+
 ## License
 
 This software is licensed under the MIT License.
