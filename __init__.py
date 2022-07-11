@@ -9,7 +9,7 @@ bl_info = {
     "author": "Natsuneko",
     "description": "Blender add-on for creating 3D Text Objects from strings",
     "blender": (3, 0, 0),
-    "version": (0, 0, 1),
+    "version": (1, 0, 0),
     "location": "3D View > Sidebar > TextMesh Creator",
     "warning": "",
     "category": "Generic"
