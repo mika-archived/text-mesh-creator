@@ -210,7 +210,7 @@ class TextMeshCreatorOperation(Operator):
         else:
             characters = [props.strings]
 
-        if props.is_preview:
+        if props.is_preview and props.is_legacy_mode:
             characters = [characters[0]]
 
         for character in characters:

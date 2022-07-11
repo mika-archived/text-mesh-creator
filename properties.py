@@ -89,6 +89,7 @@ class TextMeshCreatorProperties(PropertyGroup):
     # export
     is_preview: BoolProperty(default=False, name="Enable Preview Mode",
                              description="Set to True if want to check the generation result according to the set value", options={"HIDDEN"})
+    is_legacy_mode: BoolProperty(default=False, name="Enable Legacy Preview", description="Set to True if want to use legacy mode of behaviour for previews", options={"HIDDEN"})
     inline_fbx: BoolProperty(default=False, name="Export as inline FBX",
                              description="Set to True if export multiple separated character(s) as single FBX", options={"HIDDEN"})
     increment_from: IntProperty(default=0, name="Increment From",
